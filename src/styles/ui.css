@@ -1,0 +1,150 @@
+/* UI components: design system tokens */
+
+/* Button */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  border-radius: 1rem; /* rounded-2xl */
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  font-family: inherit;
+}
+
+.ui-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary);
+}
+
+.ui-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ui-btn--primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+.ui-btn--primary:hover:not(:disabled) {
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
+}
+
+.ui-btn--secondary {
+  background-color: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.ui-btn--secondary:hover:not(:disabled) {
+  background-color: var(--bg);
+  border-color: var(--muted);
+}
+
+.ui-btn--ghost {
+  background-color: transparent;
+  color: var(--text);
+  box-shadow: none;
+}
+
+.ui-btn--ghost:hover:not(:disabled) {
+  background-color: var(--bg);
+}
+
+/* Card */
+.ui-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  overflow: hidden;
+}
+
+/* Input */
+.ui-input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ui-input::placeholder {
+  color: var(--muted);
+}
+
+.ui-input:hover:not(:disabled) {
+  border-color: var(--muted);
+}
+
+.ui-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.ui-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ui-input-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.ui-input-wrapper {
+  display: block;
+}
+
+.ui-input-error {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+/* Badge */
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.25;
+  border-radius: 0.50rem;
+  border: 1px solid var(--border);
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.ui-badge--primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+/* CodeBlock copy button */
+.code-block-copy-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #2563EB;
+}

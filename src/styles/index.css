@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+@import './globals.css';
+@import './ui.css';
+
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 2rem;
+}
