@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Button, Input } from '../components/ui';
+import { AuthError, useAuth } from '../context/AuthContext';
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { login, user, logout } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -12,25 +14,17 @@ export function LoginPage() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-
-    if (!trimmedEmail || !trimmedPassword) {
-      setError('Введите email и пароль');
-      return;
+    try {
+      login(email, password);
+      setError(null);
+      navigate('/');
+    } catch (err) {
+      if (err instanceof AuthError) {
+        setError(err.message);
+        return;
+      }
+      setError('Не удалось выполнить вход');
     }
-
-    setError(null);
-
-    const payload = {
-      email: trimmedEmail,
-      password: trimmedPassword,
-    };
-
-    // Здесь в реальном приложении можно отправить payload на API авторизации.
-    console.log('Авторизация', payload);
-
-    navigate('/');
   };
 
   return (
@@ -38,7 +32,11 @@ export function LoginPage() {
       <Header
         searchPlaceholder="Поиск постов..."
         onNewPost={() => navigate('/posts/new')}
-        onProfileClick={() => {}}
+        userName={user?.name}
+        onLogout={user ? logout : undefined}
+        onProfileClick={() => {
+          if (!user) navigate('/login');
+        }}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">

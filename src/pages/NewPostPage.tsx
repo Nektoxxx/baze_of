@@ -4,13 +4,17 @@ import { Header } from '../components/layout/Header';
 import { Button, Input } from '../components/ui';
 import { CategoryFilter } from '../components/filters/CategoryFilter';
 import type { CategoryFilterValue } from '../components/filters/CategoryFilter';
+import { PostEditor } from '../components/editor/PostEditor';
+import type { Block } from '../components/editor/PostEditor';
+import { useAuth } from '../context/AuthContext';
 
 export function NewPostPage() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const [title, setTitle] = useState('');
   const [preview, setPreview] = useState('');
-  const [body, setBody] = useState('');
+  const [blocks, setBlocks] = useState<Block[]>([]);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [subcategoryId, setSubcategoryId] = useState<string | null>(null);
 
@@ -36,15 +40,12 @@ export function NewPostPage() {
     const payload = {
       title: trimmedTitle,
       preview: preview.trim(),
-      body: body.trim(),
+      blocks,
       categoryId,
       subcategoryId,
     };
 
-    // Здесь в реальном приложении можно отправить payload на API.
-    // Для демо просто выведем в консоль и вернёмся на ленту.
     console.log('Новый пост опубликован', payload);
-
     navigate('/');
   };
 
@@ -53,7 +54,11 @@ export function NewPostPage() {
       <Header
         searchPlaceholder="Поиск постов..."
         onNewPost={() => navigate('/posts/new')}
-        onProfileClick={() => navigate('/login')}
+        userName={user?.name}
+        onLogout={user ? logout : undefined}
+        onProfileClick={() => {
+          if (!user) navigate('/login');
+        }}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
@@ -70,7 +75,7 @@ export function NewPostPage() {
           </h1>
 
           <form
-            className="mt-6 space-y-4 md:space-y-6"
+            className="mt-6 space-y-6"
             onSubmit={handleSubmit}
             aria-label="Форма создания нового поста"
           >
@@ -90,16 +95,8 @@ export function NewPostPage() {
             />
 
             <div>
-              <label htmlFor="post-body" className="ui-input-label">
-                Текст поста
-              </label>
-              <textarea
-                id="post-body"
-                className="ui-input min-h-[160px]"
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="Основной текст поста, можно с кодом и пояснениями"
-              />
+              <p className="ui-input-label mb-3">Содержимое поста</p>
+              <PostEditor blocks={blocks} onChange={setBlocks} />
             </div>
 
             <div>

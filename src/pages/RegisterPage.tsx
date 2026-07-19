@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Button, Input } from '../components/ui';
+import { AuthError, useAuth } from '../context/AuthContext';
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const { register, user, logout } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,33 +16,29 @@ export function RegisterPage() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
     const trimmedConfirm = confirmPassword.trim();
 
-    if (!trimmedName || !trimmedEmail || !trimmedPassword || !trimmedConfirm) {
+    if (!name.trim() || !email.trim() || !password.trim() || !trimmedConfirm) {
       setError('Заполните все поля');
       return;
     }
 
-    if (trimmedPassword !== trimmedConfirm) {
+    if (password.trim() !== trimmedConfirm) {
       setError('Пароли не совпадают');
       return;
     }
 
-    setError(null);
-
-    const payload = {
-      name: trimmedName,
-      email: trimmedEmail,
-      password: trimmedPassword,
-    };
-
-    // Здесь в реальном приложении можно отправить payload на API регистрации.
-    console.log('Регистрация', payload);
-
-    navigate('/login');
+    try {
+      register(name, email, password);
+      setError(null);
+      navigate('/');
+    } catch (err) {
+      if (err instanceof AuthError) {
+        setError(err.message);
+        return;
+      }
+      setError('Не удалось зарегистрироваться');
+    }
   };
 
   return (
@@ -48,7 +46,11 @@ export function RegisterPage() {
       <Header
         searchPlaceholder="Поиск постов..."
         onNewPost={() => navigate('/posts/new')}
-        onProfileClick={() => {}}
+        userName={user?.name}
+        onLogout={user ? logout : undefined}
+        onProfileClick={() => {
+          if (!user) navigate('/login');
+        }}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
